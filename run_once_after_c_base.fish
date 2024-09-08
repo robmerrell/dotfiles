@@ -1,8 +1,11 @@
 #!/bin/fish
 
+source $HOME/.local/share/omf/init.fish
+
 # asdf
 rm -rf $HOME/.asdf
 git clone https://github.com/asdf-vm/asdf.git $HOME/.asdf --branch v0.14.1
+source $HOME/.asdf/asdf.fish
 
 # go
 rm -rf $HOME/go
@@ -23,6 +26,7 @@ asdf global nodejs 22.7.0
 
 # rust
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+source $HOME/.cargo/env.fish
 
 # helix
 rm -rf $HOME/projects/gh/helix
