@@ -61,7 +61,6 @@ require("mason-tool-installer").setup({
 
     -- text
     "jq",
-    "xmlformatter",
   },
 })
 
@@ -113,7 +112,6 @@ require("conform").setup({
   formatters_by_ft = {
     lua = { "stylua" },
     json = { "jq" },
-    xml = { "xmlformat" },
   },
   format_on_save = {
     lsp_fallback = true,

@@ -15,7 +15,6 @@ require("robm.look")
 ----------------
 -- C compiler (Treesitter)
 -- Rust (stylua)
--- Python3 and Python-venv (xmlformat)
 -- Go (go lsp and formatter)
 -- Git
 
