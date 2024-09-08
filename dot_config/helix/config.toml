@@ -1,0 +1,47 @@
+theme = "tokyonight_storm"
+
+[editor]
+true-color = true
+line-number = "relative"
+end-of-line-diagnostics = "hint"
+
+[editor.inline-diagnostics]
+cursor-line = "warning" # show warnings and errors on the cursorline inline
+
+[editor.indent-guides]
+# I dislike how selections don't change the background of the guide
+render = false
+character = "│"
+
+[editor.cursor-shape]
+insert = "bar"
+normal = "block"
+select = "block"
+
+[editor.lsp]
+# this is off because elixir-ls wants to always display docs for for
+# def, if, defmodule and other useless things instead of helpful docs.
+# display-signature-help-docs = false
+auto-signature-help = false
+
+[keys.insert]
+"C-d" = ":insert-output exec $SHELL -lc 'dbg_snippet'"
+
+[keys.normal]
+"X" = "extend_line_above"
+
+[keys.normal.space]
+"F" = "file_picker_in_current_buffer_directory"
+
+### custom leader keys
+[keys.normal.space.r]
+# format selected json
+"j" = ":pipe jq"
+# send keys to rerun in named tmux test pane
+"p" = ":sh exec $SHELL -lc 'rerun_tests'"
+# send keys to rerun the pane to the right of the current pane
+"r" = ":sh exec $SHELL -lc 'rerun_right'"
+# send keys to rerun in named tmux shell pane
+"s" = ":sh exec $SHELL -lc 'rerun_shell'"
+# format selected xml
+"x" = ":pipe xmllint --format -"

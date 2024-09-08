@@ -1,0 +1,58 @@
+# Elixir
+[language-server.lexical]
+command = "start_lexical.sh"
+
+[language-server.elixir-ls]
+command = "language_server.sh"
+
+[[language]]
+name = "elixir"
+language-servers = ["elixir-ls"]
+auto-format = true
+indent = { tab-width = 2, unit = "  " }
+
+[[language]]
+name = "heex"
+language-servers = ["elixir-ls"]
+auto-format = true
+indent = { tab-width = 2, unit = "  " }
+
+# JSON
+[[language]]
+name = "json"
+auto-format = true
+formatter = { command = "jq", args = [".", "-"] }
+indent = { tab-width = 2, unit = "  " }
+
+# ROC
+[language-server.roc-ls]
+command = "roc_language_server"
+
+[[language]]
+name = "roc"
+scope = "source.roc"
+injection-regex = "roc"
+file-types = ["roc"]
+shebangs = ["roc"]
+roots = []
+comment-token = "#"
+language-servers = ["roc-ls"]
+indent = { tab-width = 4, unit = "  " }
+auto-format = true
+formatter = { command = "roc", args =[ "format", "--stdin", "--stdout"]}
+
+[[grammar]]
+name = "roc"
+source = { git = "https://github.com/faldor20/tree-sitter-roc.git", rev = "a639cb367b0ffe95cd7d94ad5b4a26da0337180f" }
+
+
+# XML
+[[language]]
+name = "xml"
+auto-format = true
+formatter = { command = "xmllint", args = ["--format", "-"] }
+indent = { tab-width = 2, unit = "  " }
+
+# Zig
+[language-server.zls]
+command = "/home/robmerrell/projects/gh/zls/zig-out/bin/zls"
