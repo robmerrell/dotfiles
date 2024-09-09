@@ -33,7 +33,6 @@ mkdir -p ~/bin
 brew bundle --no-lock --file=/dev/stdin <<EOF
 tap "d12frosted/emacs-plus"
 tap "homebrew/bundle"
-tap "homebrew/cask-fonts"
 tap "homebrew/services"
 brew "aws-sam-cli"
 brew "awscli"
@@ -77,12 +76,6 @@ brew "yazi"
 brew "zellij"
 brew "zoxide"
 brew "d12frosted/emacs-plus/emacs-plus@30", args: ["with-dragon-icon"]
-cask "font-fira-mono"
-cask "font-jetbrains-mono"
-cask "font-monaspace"
-cask "font-roboto-mono"
-cask "font-roboto-mono-nerd-font"
-cask "font-symbols-only-nerd-font"
 cask "kitty"
 EOF
 {{ end -}}
