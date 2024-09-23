@@ -35,8 +35,12 @@ auto-signature-help = false
 
 ### custom leader keys
 [keys.normal.space.r]
+# open location in github
+"g" = ":sh exec $SHELL -lc 'gh browse %{filename:git_rel}:%{linenumber}'"
 # format selected json
 "j" = ":pipe jq"
+# copy the current line to the clipboard
+"l" = ":sh exec $SHELL -lc 'echo -n %{filename:git_rel}:%{linenumber} | fish_clipboard_copy'"
 # send keys to rerun in named tmux test pane
 "p" = ":sh exec $SHELL -lc 'rerun_tests'"
 # send keys to rerun the pane to the right of the current pane
