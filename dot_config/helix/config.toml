@@ -33,8 +33,7 @@ select = "block"
 [keys.normal.space]
 "F" = "file_picker_in_current_buffer_directory"
 
-### custom leader keys
-[keys.normal.space.r]
+[keys.normal.space.space]
 # open location in github
 "g" = ":sh exec $SHELL -lc 'gh browse %{filename:git_rel}:%{linenumber}'"
 # format selected json
