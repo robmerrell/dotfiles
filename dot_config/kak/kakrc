@@ -1,0 +1,158 @@
+# plugins
+source "%val{config}/bundle/kak-bundle/rc/kak-bundle.kak"
+bundle-noload kak-bundle https://codeberg.org/jdugan6240/kak-bundle
+
+# Colors
+bundle-noload kakoune-tree-sitter-themes https://github.com/hadronized/kakoune-tree-sitter-themes
+bundle-install-hook kakoune-tree-sitter-themes %{
+  mkdir -p ${kak_config}/colors
+  cp -r "${kak_opt_bundle_path}/kakoune-tree-sitter-themes/colors" "${kak_config}/colors/"
+}
+
+colorscheme catppuccin_macchiato
+
+# Terminal title
+set-option global ui_options terminal_set_title=no
+
+# Width of a tab
+set-option global tabstop 2
+
+# Indent with 2 spaces
+set-option global indentwidth 2
+
+# Display line numbers
+add-highlighter global/ number-lines -relative
+
+# Highlight trailing whitespace
+add-highlighter global/ regex \h+$ 0:Error
+
+# Softwrap long lines
+add-highlighter global/ wrap -word -indent
+
+# Always keep one line and three columns displayed around the cursor
+set-option global scrolloff 4,3
+
+
+##### Autopairs #####
+bundle auto-pairs.kak https://github.com/alexherbo2/auto-pairs.kak %{
+  set-option global auto_pairs ( ) { } [ ] '"' '"' "'" "'" ` ` “ ” ‘ ’ « » ‹ ›
+  enable-auto-pairs
+}
+
+
+##### FZF #####
+source "%val{config}/local/fzf.kak/rc/fzf.kak"
+source "%val{config}/local/fzf.kak/rc/modules/fzf-buffer.kak"
+source "%val{config}/local/fzf.kak/rc/modules/fzf-file.kak"
+source "%val{config}/local/fzf.kak/rc/modules/fzf-grep.kak"
+source "%val{config}/local/fzf.kak/rc/modules/fzf-search.kak"
+
+
+##### Easymotion #####
+bundle easymotion.kak https://git.sr.ht/~voroskoi/easymotion.kak %{
+	require-module easymotion
+}
+
+
+##### window management #####
+define-command -docstring "vsplit [<commands>]: split tmux vertically" \
+vsplit -params .. -command-completion %{
+    tmux-terminal-horizontal kak -c %val{session} -e "%arg{@}"
+}
+
+define-command -docstring "split [<commands>]: split tmux horizontally" \
+split -params .. -command-completion %{
+    tmux-terminal-vertical kak -c %val{session} -e "%arg{@}"
+}
+
+define-command -docstring "tabnew [<commands>]: create new tmux window" \
+tabnew -params .. -command-completion %{
+    tmux-terminal-window kak -c %val{session} -e "%arg{@}"
+}
+
+
+##### git diff #####
+# enable flag-lines hl for git diff
+hook global WinCreate .* %{
+    add-highlighter window/git-diff flag-lines Default git_diff_flags
+}
+# trigger update diff if inside git dir
+hook global BufOpenFile .* %{
+    evaluate-commands -draft %sh{
+        cd $(dirname "$kak_buffile")
+        if [ $(git rev-parse --git-dir 2>/dev/null) ]; then
+            for hook in WinCreate BufReload BufWritePost; do
+                printf "hook buffer -group git-update-diff %s .* 'git update-diff'\n" "$hook"
+            done
+        fi
+    }
+}
+
+
+##### tree-sitter #####
+
+
+##### LSP #####
+eval %sh{kak-lsp}
+hook global WinSetOption filetype=(?:elixir|go) %{
+	lsp-enable-window
+}
+
+
+##### Languages #####
+hook global BufSetOption filetype=elixir %{
+  hook buffer BufWritePre .* lsp-formatting-sync
+}
+
+hook global BufSetOption filetype=go %{
+  set-option global tabstop 4
+  hook buffer BufWritePre .* lsp-formatting-sync
+}
+
+
+##### Harpoon #####
+bundle kak-harpoon https://github.com/raiguard/kak-harpoon %{}
+
+
+##### Keymaps #####
+# Top Level
+map -docstring "Buffers and marks" global user b ": enter-user-mode buffers<ret>"
+map -docstring "Easy Motion" global user e ": enter-user-mode easymotion<ret>"
+map -docstring "FZF" global user f ": fzf-mode<ret>"
+map -docstring "Harpoon" global user h ":enter-user-mode harpoon-nav-list<ret>"
+map -docstring "LSP/Code" global user l ": enter-user-mode lsp-code<ret>"
+map -docstring "Paste the clipboard" global user p "<a-!> exec $SHELL -lc 'fish_clipboard_paste'<ret>"
+map -docstring "Windows" global user w ": enter-user-mode window-management<ret>"
+map -docstring "Yank the selection into the clipboard" global user y "<a-|> exec $SHELL -lc 'fish_clipboard_copy'<ret>"
+
+# Buffer and marks
+declare-user-mode buffers
+
+# Harpoon
+declare-user-mode harpoon-nav-list
+map -docstring "Nav To 1" global harpoon-nav-list 1 ": harpoon-nav 1<ret>"
+map -docstring "Nav To 2" global harpoon-nav-list 2 ": harpoon-nav 2<ret>"
+map -docstring "Nav To 3" global harpoon-nav-list 3 ": harpoon-nav 3<ret>"
+map -docstring "Nav To 4" global harpoon-nav-list 4 ": harpoon-nav 4<ret>"
+map -docstring "Nav To 5" global harpoon-nav-list 5 ": harpoon-nav 5<ret>"
+map -docstring "Show all harpoons" global harpoon-nav-list h ": harpoon-show-list<ret>"
+map -docstring "Add the current file to the list of harpoons" global harpoon-nav-list H ": harpoon-add<ret>"
+
+# (l)SP and general Code
+declare-user-mode lsp-code
+map -docstring "(Un)comment selected lines" global lsp-code c ": comment-line<ret>"
+map -docstring "Diagnostics" global lsp-code d ": lsp-diagnostics<ret>"
+map -docstring "Find error" global lsp-code e ": lsp-find-error<ret>"
+map -docstring "Show documentation" global lsp-code k ": lsp-hover<ret>"
+map -docstring "Show documentation in buffer" global lsp-code K ": lsp-hover-buffer<ret>"
+map -docstring "Document symbols" global lsp-code s ": lsp-document-symbol<ret>"
+
+# Window management
+declare-user-mode window-management
+map -docstring "Close" global window-management q ": q<ret>"
+map -docstring "Split horizontally" global window-management s ": split<ret>"
+map -docstring "Split vertically" global window-management v ": vsplit<ret>"
+map -docstring 'select pane left' global window-management h %{:nop %sh{TMUX="${kak_client_env_TMUX}" tmux select-pane -L}<ret>}
+map -docstring 'select pane down' global window-management j %{:nop %sh{TMUX="${kak_client_env_TMUX}" tmux select-pane -D}<ret>}
+map -docstring 'select pane up' global window-management k %{:nop %sh{TMUX="${kak_client_env_TMUX}" tmux select-pane -U}<ret>}
+map -docstring 'select pane right' global window-management l %{:nop %sh{TMUX="${kak_client_env_TMUX}" tmux select-pane -R}<ret>}
