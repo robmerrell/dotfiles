@@ -2,15 +2,6 @@
 source "%val{config}/bundle/kak-bundle/rc/kak-bundle.kak"
 bundle-noload kak-bundle https://codeberg.org/jdugan6240/kak-bundle
 
-# Colors
-bundle-noload kakoune-tree-sitter-themes https://github.com/hadronized/kakoune-tree-sitter-themes
-bundle-install-hook kakoune-tree-sitter-themes %{
-  mkdir -p ${kak_config}/colors
-  cp -r "${kak_opt_bundle_path}/kakoune-tree-sitter-themes/colors" "${kak_config}/colors/"
-}
-
-colorscheme catppuccin_macchiato
-
 # Terminal title
 set-option global ui_options terminal_set_title=no
 
@@ -38,6 +29,10 @@ bundle auto-pairs.kak https://github.com/alexherbo2/auto-pairs.kak %{
   set-option global auto_pairs ( ) { } [ ] '"' '"' "'" "'" ` ` “ ” ‘ ’ « » ‹ ›
   enable-auto-pairs
 }
+
+
+##### Surround #####
+bundle kakoune-surround https://github.com/h-youhei/kakoune-surround %{}
 
 
 ##### FZF #####
@@ -90,6 +85,14 @@ hook global BufOpenFile .* %{
 
 
 ##### tree-sitter #####
+eval %sh{ kak-tree-sitter -dks -vvvvv --init $kak_session }
+bundle-noload kakoune-tree-sitter-themes https://github.com/hadronized/kakoune-tree-sitter-themes
+bundle-install-hook kakoune-tree-sitter-themes %{
+  mkdir -p ${kak_config}/colors
+  cp -r "${kak_opt_bundle_path}/kakoune-tree-sitter-themes/colors" "${kak_config}/colors/"
+}
+
+colorscheme catppuccin_macchiato
 
 
 ##### LSP #####
@@ -122,8 +125,9 @@ map -docstring "FZF" global user f ": fzf-mode<ret>"
 map -docstring "Harpoon" global user h ":enter-user-mode harpoon-nav-list<ret>"
 map -docstring "LSP/Code" global user l ": enter-user-mode lsp-code<ret>"
 map -docstring "Paste the clipboard" global user p "<a-!> exec $SHELL -lc 'fish_clipboard_paste'<ret>"
+map -docstring "Surround" global user s ": enter-user-mode surround<ret>"
 map -docstring "Windows" global user w ": enter-user-mode window-management<ret>"
-map -docstring "Yank the selection into the clipboard" global user y "<a-|> exec $SHELL -lc 'fish_clipboard_copy'<ret>"
+map -docstring "Yank to clipboard" global user y "<a-|> exec $SHELL -lc 'fish_clipboard_copy'<ret>"
 
 # Buffer and marks
 declare-user-mode buffers
@@ -147,12 +151,19 @@ map -docstring "Show documentation" global lsp-code k ": lsp-hover<ret>"
 map -docstring "Show documentation in buffer" global lsp-code K ": lsp-hover-buffer<ret>"
 map -docstring "Document symbols" global lsp-code s ": lsp-document-symbol<ret>"
 
+# Surround
+declare-user-mode surround
+map -docstring "Surround" global surround s ": surround<ret>" 
+map -docstring "Change" global surround c ": change-surround<ret>" 
+map -docstring "Delete" global surround d ": delete-surround<ret>" 
+map -docstring "Select tag" global surround t ": select-surrounding-tag<ret>" 
+
 # Window management
 declare-user-mode window-management
 map -docstring "Close" global window-management q ": q<ret>"
 map -docstring "Split horizontally" global window-management s ": split<ret>"
 map -docstring "Split vertically" global window-management v ": vsplit<ret>"
-map -docstring 'select pane left' global window-management h %{:nop %sh{TMUX="${kak_client_env_TMUX}" tmux select-pane -L}<ret>}
-map -docstring 'select pane down' global window-management j %{:nop %sh{TMUX="${kak_client_env_TMUX}" tmux select-pane -D}<ret>}
-map -docstring 'select pane up' global window-management k %{:nop %sh{TMUX="${kak_client_env_TMUX}" tmux select-pane -U}<ret>}
-map -docstring 'select pane right' global window-management l %{:nop %sh{TMUX="${kak_client_env_TMUX}" tmux select-pane -R}<ret>}
+map -docstring "Select pane left" global window-management h %{:nop %sh{TMUX="${kak_client_env_TMUX}" tmux select-pane -L}<ret>}
+map -docstring "Select pane down" global window-management j %{:nop %sh{TMUX="${kak_client_env_TMUX}" tmux select-pane -D}<ret>}
+map -docstring "Select pane up" global window-management k %{:nop %sh{TMUX="${kak_client_env_TMUX}" tmux select-pane -U}<ret>}
+map -docstring "Select pane right" global window-management l %{:nop %sh{TMUX="${kak_client_env_TMUX}" tmux select-pane -R}<ret>}

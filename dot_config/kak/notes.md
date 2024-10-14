@@ -1,32 +1,33 @@
+# Install
+- Rust
+- kak-lsp
+- kak-tree-sitter
+  - sync grammars
+
 # Keybinds 
 alt-i - select inner
-m - extend to matching
+m - extend to matching (jump to matching)
 alt-j - join selected lines
 {num}g - go to the line number
+Case insensitive search - (?i)searchterm
 
 # Keybinds to research
 https://github.com/mawww/kakoune/blob/master/doc/pages/keys.asciidoc
-Change surrounding characters
-Case insensitive search
+Search and replace
 
 # TODO
-- [ ] Learn how to read documentation
 - [ ] More apparant which window is active
 - [ ] Snippets
-- [ ] Tree-Sitter
 - [ ] Elixir mode
   - [ ] Tests
 - [ ] Gleam mode
 - [ ] Roc mode
-- [ ] Go mode
-  - [x] 4 Spaces
-- [ ] markdown mode
 - [ ] Better complete?
-- [ ] File explorer
+  - [ ] Completion finish button
+  - [ ] Show docs
 - [ ] Connect to kak session
 - [ ] Open in github
 - [ ] proj_elixir integration
-- [ ] add to chezmoi
+- [ ] Copy file and line to clipboard
 - [ ] find out where to see lsp log
 - [ ] Don't keep writing comments when making a new line
-- [ ] ctrl-f ctrl-b put cursor in the center?
