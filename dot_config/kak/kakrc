@@ -101,6 +101,17 @@ hook global WinSetOption filetype=(?:elixir|go) %{
 	lsp-enable-window
 }
 
+hook -group lsp-filetype-elixir global BufSetOption filetype=elixir %{
+  set-option buffer lsp_servers %{
+    [elixir-ls]
+    command = "language_server.sh"
+    root_globs = ["mix.exs"]
+    settings_section = "elixirLS"
+    [elixir-ls.settings.elixirLS]
+    dialyzerEnable = true
+  }
+}
+
 
 ##### Languages #####
 hook global BufSetOption filetype=elixir %{

@@ -22,10 +22,11 @@ select = "block"
 # this is off because elixir-ls wants to always display docs for for
 # def, if, defmodule and other useless things instead of helpful docs.
 # display-signature-help-docs = false
-# auto-signature-help = false
+auto-signature-help = false
 
 [keys.insert]
 "C-d" = ":insert-output exec $SHELL -lc 'dbg_snippet'"
+"C-k" = "signature_help"
 
 [keys.normal]
 "X" = "extend_line_above"
